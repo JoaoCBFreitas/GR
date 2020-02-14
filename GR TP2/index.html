@@ -1,0 +1,60 @@
+<html>
+<title>GR TP2</title>
+<link rel="stylesheet" href="http://youtube.local/assets/dcode.css">
+<link rel="shortcut icon" href="http://youtube.local/assets/favicon.ico">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+
+<body>  
+    <h1>TP2 Gestao de Redes</h1>
+    <div class="form" >
+        <p>
+            <label for="porta">Port</label>
+            <input type="text" id="porta" spellcheck="false">
+        </p>
+        <p>
+            <label for="adress">Adress</label>
+            <input type="text" id="adress" spellcheck="false">
+        </p>
+        <p>
+            <label for="ini">Segundos</label>
+            <input type="text" id="ini">
+        </p>    
+    </div>
+    <button type="submit" id="ajax">Submeter</button>
+    
+    <script type="text/javascript">
+        var adressInput=document.getElementById('adress').value;
+        var portaInput=document.getElementById('porta').value;
+        var secInput=document.getElementById('ini').value;
+        var info={portaInput,adressInput,secInput};
+        $('#ajax').click(function(){
+            var timeleft=secInput;
+            var downloadTimer=setInterval(function(){
+                document.getElementById("countdown").innerHTML=timeleft+" seconds remaining";
+                timeleft-=1;
+                if(timeleft<=0){
+                    clearInterval(downloadTimer);
+                    document.getElementById("countdown").innerHTML="Finished";
+                }
+            },1000);
+             $.ajax({ 
+                 type: "POST",
+                 data: info,
+                 dataType: "text",
+                 url: "get_rest",
+                 success: function(dataOutput){
+                    console.log(dataOutput);
+                    var queryString="?par1="+dataOutput;
+                    window.location.href="dashboard.html"+queryString;
+                 }
+             });
+        });
+    </script>
+    <div id="countdown"></div>
+    </body>
+</html>

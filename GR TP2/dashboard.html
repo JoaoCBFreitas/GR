@@ -1,0 +1,145 @@
+<title>GR TP2</title>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+    <script>
+        var queryString=decodeURIComponent(window.location.search);
+        queryString=queryString.substring(1);
+        var querie="";
+        for(var i=5;i<queryString.length;i++){
+            querie=querie+queryString[i];
+        }
+        var sub=querie.split(/\[(.*?)\],/);
+        function coluna(n,string){
+            var aux=string.split(",");
+            var res=aux[n];
+            return res;
+        }
+        var segundos="";
+        for(var i=2;i<sub.length;i++){
+            if(sub[i]!=""){
+                var aux=coluna(0,sub[i]);
+                if(!segundos.includes(aux)){
+                    segundos=segundos+"|"+aux;
+                }
+            }
+        }
+        var segundosfinal=segundos.split("|");
+        segundosfinal.pop();
+        var processos="";
+        for(var i=2;i<sub.length;i++){
+            if(sub[i]!=""){
+                var aux=coluna(1,sub[i]);
+                if(!processos.includes(aux)){
+                    processos=processos+"|"+aux;
+                }
+            }
+        }
+        var processofinal=processos.split("|");
+
+        var memoria=""; 
+        for(var i=2;i<sub.length;i++){
+            if(sub[i]!=""){
+                var aux=coluna(2,sub[i]);
+                memoria=memoria+"|"+aux;
+            }
+        }
+        var memoriafinal=memoria.split("|");
+
+
+        var processador=""; 
+        for(var i=2;i<sub.length;i++){
+            if(sub[i]!=""){
+                var aux=coluna(3,sub[i]);
+                processador=processador+"|"+aux;
+            }
+        }
+        var processadorfinal=processador.split("|");
+        processadorfinal[processadorfinal.length-1]=processadorfinal[processadorfinal.length-1].slice(0,-1);
+    </script>
+
+
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawChart2);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number','Segundo');
+        for(var i=1;i<processofinal.length;i++){
+            data.addColumn('number',processofinal[i]);
+        }
+        for(var i=1;i<segundosfinal.length;i++){
+            var com=new Array();
+            com[0]=Number(segundosfinal[i].split("'")[1]);
+
+            for(var j=0,k=1;j<processofinal.length-1;j++,k+=processofinal.length-1){
+                var val=Number(memoriafinal[j+k]);//erro aqui
+                com.push(val);
+            }
+            data.addRow(com);
+        }
+
+        var options = {
+            chart:{
+                title: 'Memória utilizada por cada processo'
+            },
+            width:900,height:500
+        };
+
+        var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+        chart.draw(data, google.charts.Line.convertOptions(options));
+      }
+      function drawChart2() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number','Segundo');
+        for(var i=1;i<processofinal.length;i++){
+            data.addColumn('number',processofinal[i]);
+        }
+        for(var i=1;i<segundosfinal.length;i++){
+            var com=new Array();
+            com[0]=Number(segundosfinal[i].split("'")[1]);
+            
+            for(var j=0,k=1;j<processofinal.length-1;j++,k+=processofinal.length-1){
+                var val=Number(processadorfinal[k+j]);
+                com.push(val);
+            }
+            data.addRow(com);
+            
+        }
+
+        var options = {
+            chart:{
+                title: 'Número, em centisegundos, de recursos de CPU consumidos por cada processo '
+            },
+            width:900,height:500
+        };
+
+        var chart = new google.charts.Line(document.getElementById('linechart_material2'));
+
+        chart.draw(data, google.charts.Line.convertOptions(options));
+      }
+
+    </script>
+</head>
+
+
+<body>  
+    <h1>TP2 Gestao de Redes-Grafico</h1>
+    <script>
+    </script>
+    <div id="linechart_material" style="width: 900px; height: 500px"></div>
+    <p>
+        <div id="linechart_material2" style="width: 900px; height: 500px"></div>
+    </p>
+</body>
+</html>
